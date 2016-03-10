@@ -351,10 +351,12 @@ class SMTP():
 
         # pylint: disable=unidiomatic-typecheck
         is_raw = type(content_string) == raw
-        if os.path.isfile(content_string) and not is_raw:
-            with open(content_string, 'rb') as f:
-                content_object['encoding'] = 'base64'
-                content = f.read()
+        if not is_raw:
+            content_string = content_string.encode('utf-8')
+            if os.path.isfile(content_string):
+                with open(content_string, 'rb') as f:
+                    content_object['encoding'] = 'base64'
+                    content = f.read()
         else:
             content_object['main_type'] = 'text'
             try:
